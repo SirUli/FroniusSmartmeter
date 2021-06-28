@@ -56,7 +56,7 @@ You can check the status of the service with svstat:
 
 `svstat /service/dbus-fronius-smartmeter`
 
-#### Service Service
+### Service Service
 
 To restart the service, run the following command:
 
