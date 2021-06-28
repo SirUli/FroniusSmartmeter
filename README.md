@@ -8,6 +8,12 @@ The Python script cyclically reads data from the Fronius SmartMeter via the Fron
 
 This service has been modified fromt he original to allow for single phase support and separation of configuration from the service script. It also was updated to include all attributes in the VenusOS dashboard
 
+### Credit
+
+Credit goes to the following for this code:
+   - Ralf Zimmermann - https://github.com/RalfZim/venus.dbus-fronius-smartmeter
+   - VictronEnergy   - https://github.com/victronenergy/velib_python
+
 ### Configuration
 
 If you are using the installation script the two parameters (IP Address and Number of Phases) is set automatically.
