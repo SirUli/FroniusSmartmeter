@@ -6,13 +6,13 @@ Created by Ralf Zimmermann (mail@ralfzimmermann.de) in 2020.
 Amended by UnifiedCommsGuy (unifiedcommsguy@gmail.com) in June 2021 to include following features
 - External config file config.py
 - Support for all fields in VenusOS Screen (including Power/Current etc)
-- Support for single phase meters - 
+- Support for single phase meters
 
-This code and its documentation can be found on: https://github.com/RalfZim/venus.dbus-fronius-smartmeter
+This code can be found: https://github.com/unifiedcommsguy/victron-dbus-fronius-smartmeter
+
+Credit to Ralf Zimmermann - https://github.com/RalfZim/venus.dbus-fronius-smartmeter
 Used https://github.com/victronenergy/velib_python/blob/master/dbusdummyservice.py as basis for this service.
 Reading information from the Fronius Smart Meter via http REST API and puts the info on dbus.
-
-Amended by unified comms guy to allow single phase meters and external config file config.py
 """
 import config as cfg # import config.py file
 import gobject
