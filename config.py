@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
 fronius = {
-    "ipaddress": "x.x.x.x",
-    "numphases": "1"     # can be 1 or 3
+    "ipaddress": "###IPADDRESS###",     # IPv4 Address of Smart Meter (or Grid Connected Inverter)
+    "numphases": "###NUMPHASES###",     # can be 1 or 3
 }
