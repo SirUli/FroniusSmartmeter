@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
 """
-Created by Ralf Zimmermann (mail@ralfzimmermann.de) in 2020.
+Created by Ralf Zimmermann (mail@ralfzimmermann.de) in 2020, amended by Ben De Longis (unifiedcommsguy@gmail.com) in June 2021 to include following features:
 
-Amended by UnifiedCommsGuy (unifiedcommsguy@gmail.com) in June 2021 to include following features
 - External config file config.py
 - Support for all fields in VenusOS Screen (including Power/Current etc)
 - Support for single phase meters
@@ -59,47 +58,41 @@ class DbusDummyService:
     meter_data = meter_r.json()
     MeterModel = meter_data['Body']['Data']['Details']['Model']
 
-    # Previus config to determine phases based on returned model of meter, maybe extended in future
-    #if str(MeterModel) == 'Smart Meter 63A-1':
-    #  numphases = '1'
-    #else:
-    #  numphases = '3'
-
     # Common Items
-    MeterConsumption = meter_data['Body']['Data']['PowerReal_P_Sum']
+    MeterConsumption = float(meter_data['Body']['Data']['PowerReal_P_Sum'])
     self._dbusservice['/Ac/Power'] = MeterConsumption # positive: consumption, negative: feed into grid
-    self._dbusservice['/Ac/Current'] = meter_data['Body']['Data']['Current_AC_Sum']
-    self._dbusservice['/Ac/Energy/Forward'] = meter_data['Body']['Data']['EnergyReal_WAC_Sum_Consumed']
-    self._dbusservice['/Ac/Energy/Reverse'] = meter_data['Body']['Data']['EnergyReal_WAC_Sum_Produced']
-    self._dbusservice['/Ac/L1/Voltage'] = meter_data['Body']['Data']['Voltage_AC_Phase_1']
-    self._dbusservice['/Ac/L1/Current'] = meter_data['Body']['Data']['Current_AC_Phase_1']
-    self._dbusservice['/Ac/L1/Power'] = meter_data['Body']['Data']['PowerReal_P_Phase_1']
-    self._dbusservice['/Ac/L1/Energy/Forward'] = meter_data['Body']['Data']['EnergyReal_WAC_Phase_1_Consumed']
-    self._dbusservice['/Ac/L1/Energy/Reverse'] = meter_data['Body']['Data']['EnergyReal_WAC_Phase_1_Produced']
+    self._dbusservice['/Ac/Current'] = float(meter_data['Body']['Data']['Current_AC_Sum'])
+    self._dbusservice['/Ac/Energy/Forward'] = float(meter_data['Body']['Data']['EnergyReal_WAC_Sum_Consumed']) / 1000
+    self._dbusservice['/Ac/Energy/Reverse'] = float(meter_data['Body']['Data']['EnergyReal_WAC_Sum_Produced']) / 1000
+    self._dbusservice['/Ac/L1/Voltage'] = float(meter_data['Body']['Data']['Voltage_AC_Phase_1'])
+    self._dbusservice['/Ac/L1/Current'] = float(meter_data['Body']['Data']['Current_AC_Phase_1'])
+    self._dbusservice['/Ac/L1/Power'] = float(meter_data['Body']['Data']['PowerReal_P_Phase_1'])
+    self._dbusservice['/Ac/L1/Energy/Forward'] = float(meter_data['Body']['Data']['EnergyReal_WAC_Phase_1_Consumed']) / 1000
+    self._dbusservice['/Ac/L1/Energy/Reverse'] = float(meter_data['Body']['Data']['EnergyReal_WAC_Phase_1_Produced']) / 1000
 
     if cfg.fronius["numphases"] == '1':
-      self._dbusservice['/Ac/L2/Voltage'] = 0
-      self._dbusservice['/Ac/L3/Voltage'] = 0
-      self._dbusservice['/Ac/L2/Current'] = 0
-      self._dbusservice['/Ac/L3/Current'] = 0
-      self._dbusservice['/Ac/L2/Power'] = 0
-      self._dbusservice['/Ac/L3/Power'] = 0
-      self._dbusservice['/Ac/L2/Energy/Forward'] = 0
-      self._dbusservice['/Ac/L2/Energy/Reverse'] = 0
-      self._dbusservice['/Ac/L3/Energy/Forward'] = 0
-      self._dbusservice['/Ac/L3/Energy/Reverse'] = 0
+      self._dbusservice['/Ac/L2/Voltage'] = 0.0
+      self._dbusservice['/Ac/L3/Voltage'] = 0.0
+      self._dbusservice['/Ac/L2/Current'] = 0.0
+      self._dbusservice['/Ac/L3/Current'] = 0.0
+      self._dbusservice['/Ac/L2/Power'] = 0.0
+      self._dbusservice['/Ac/L3/Power'] = 0.0
+      self._dbusservice['/Ac/L2/Energy/Forward'] = 0.0
+      self._dbusservice['/Ac/L2/Energy/Reverse'] = 0.0
+      self._dbusservice['/Ac/L3/Energy/Forward'] = 0.0
+      self._dbusservice['/Ac/L3/Energy/Reverse'] = 0.0
     else:
-      self._dbusservice['/Ac/L2/Voltage'] = meter_data['Body']['Data']['Voltage_AC_Phase_2']
-      self._dbusservice['/Ac/L3/Voltage'] = meter_data['Body']['Data']['Voltage_AC_Phase_3']
-      self._dbusservice['/Ac/L2/Current'] = meter_data['Body']['Data']['Current_AC_Phase_2']
-      self._dbusservice['/Ac/L3/Current'] = meter_data['Body']['Data']['Current_AC_Phase_3']
-      self._dbusservice['/Ac/L2/Power'] = meter_data['Body']['Data']['PowerReal_P_Phase_2']
-      self._dbusservice['/Ac/L3/Power'] = meter_data['Body']['Data']['PowerReal_P_Phase_3']
-      self._dbusservice['/Ac/L2/Energy/Forward'] = meter_data['Body']['Data']['EnergyReal_WAC_Phase_2_Consumed']
-      self._dbusservice['/Ac/L2/Energy/Reverse'] = meter_data['Body']['Data']['EnergyReal_WAC_Phase_2_Produced']
-      self._dbusservice['/Ac/L3/Energy/Forward'] = meter_data['Body']['Data']['EnergyReal_WAC_Phase_3_Consumed']
-      self._dbusservice['/Ac/L3/Energy/Reverse'] = meter_data['Body']['Data']['EnergyReal_WAC_Phase_3_Produced']
-    
+      self._dbusservice['/Ac/L2/Voltage'] = float(meter_data['Body']['Data']['Voltage_AC_Phase_2'])
+      self._dbusservice['/Ac/L3/Voltage'] = float(meter_data['Body']['Data']['Voltage_AC_Phase_3'])
+      self._dbusservice['/Ac/L2/Current'] = float(meter_data['Body']['Data']['Current_AC_Phase_2'])
+      self._dbusservice['/Ac/L3/Current'] = float(meter_data['Body']['Data']['Current_AC_Phase_3'])
+      self._dbusservice['/Ac/L2/Power'] = float(meter_data['Body']['Data']['PowerReal_P_Phase_2'])
+      self._dbusservice['/Ac/L3/Power'] = float(meter_data['Body']['Data']['PowerReal_P_Phase_3'])
+      self._dbusservice['/Ac/L2/Energy/Forward'] = float(meter_data['Body']['Data']['EnergyReal_WAC_Phase_2_Consumed']) / 1000
+      self._dbusservice['/Ac/L2/Energy/Reverse'] = float(meter_data['Body']['Data']['EnergyReal_WAC_Phase_2_Produced']) / 1000
+      self._dbusservice['/Ac/L3/Energy/Forward'] = float(meter_data['Body']['Data']['EnergyReal_WAC_Phase_3_Consumed']) / 1000
+      self._dbusservice['/Ac/L3/Energy/Reverse'] = float(meter_data['Body']['Data']['EnergyReal_WAC_Phase_3_Produced']) / 1000
+
     logging.info("House Consumption: %s" % (MeterConsumption))
     return True
 
@@ -146,3 +139,4 @@ def main():
 
 if __name__ == "__main__":
   main()
+
