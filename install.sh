@@ -70,6 +70,20 @@ else
 	echo "ln -s ${ROOT_PATH}/service /service/dbus-fronius-smartmeter" >> /data/rc.local
 fi
 
+if grep -Fxq "sleep 5                                   # Wait 5 seconds before restarting Fronius Smart Meter DBUS Service" /data/rc.local
+then
+	echo -n ""
+else
+	echo "sleep 5                                   # Wait 5 seconds before restarting Fronius Smart Meter DBUS Service" >> /data/rc.local
+fi
+
+if grep -Fxq "${ROOT_PATH}/kill_me.sh  # Restart the Fronius Smart Meter DBUS Service" /data/rc.local
+then
+	echo -n ""
+else
+	echo "${ROOT_PATH}/kill_me.sh  # Restart the Fronius Smart Meter DBUS Service" >> /data/rc.local
+fi
+
 # Wait 5 Seconds
 sleep 5
 
