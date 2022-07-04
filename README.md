@@ -11,8 +11,10 @@ This service has been modified fromt he original to allow for single phase suppo
 ## Credit
 
 Special thanks goes to the following for the basis of this modified code:
-   - Ralf Zimmermann - https://github.com/RalfZim/venus.dbus-fronius-smartmeter
-   - VictronEnergy   - https://github.com/victronenergy/velib_python
+
+- Ralf Zimmermann - https://github.com/RalfZim/venus.dbus-fronius-smartmeter
+- Ben De Longis - https://github.com/unifiedcommsguy/victron-dbus-fronius-smartmeter
+- VictronEnergy - https://github.com/victronenergy/velib_python
 
 ## Configuration
 

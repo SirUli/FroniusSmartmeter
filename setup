@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#	Fronius Smartmeter
+#	Setup script (install/uninstall)
+#
+# this script will accept the following commands on the command line:
+#	setup install
+#	setup uninstall
+#	setup reinstall (used to reinstall after Venus OS update)
+
+packageLogFile="/var/log/fronius-smartmeter/current"
+
+#### following line incorporates SetupHelper utilities into this script
+# Refer to the SetupHelper ReadMe file for details.
+
+source "/data/SetupHelper/CommonResources"
+
+# GitHub account info - fill in as appropriate
+# to include this package in SetupHelper automatic updates
+packageGitHubUser="SirUli"
+packageGitHubBranch="main"
+
+#### end of lines to include SetupHelper
+
+#### running manually and OK to proceed - prompt for input
+if [ $scriptAction == 'NONE' ] ; then
+    # display innitial message
+    echo
+    echo "This package reads an Fronius Smart Meter and forwards it to the dbus"
+
+    standardActionPrompt
+fi
+
+#### install code goes here
+if [ $scriptAction == 'INSTALL' ] ; then
+
+    logMessage "++ Installing Fronius Smartmeter service"
+
+    installService $packageName
+fi
+
+#### uninstalling - check scriptAction again
+# if an install step failed package needs to be removed
+if [ $scriptAction == 'UNINSTALL' ] ; then
+    logMessage "++ Uninstalling Fronius Smartmeter service"
+
+    removeService $packageName
+fi
+endScript
