@@ -4,9 +4,9 @@
 
 This service is meant to be run on a Raspberry Pi with Venus OS from Victron.
 
-The Python script cyclically reads data from the Fronius SmartMeter via the Fronius REST API and publishes information on the dbus, using the service name com.victronenergy.grid. This makes the Venus OS work as if you had a physical Victron Grid Meter installed.
+The Python script periodically reads data from a Fronius SmartMeter via the Fronius REST API and publishes information on the dbus, using the service name ``com.victronenergy.grid.fronius``. This makes the Venus OS work as if you had a Victron Grid Meter installed.
 
-This service has been modified fromt he original to allow for single phase support and separation of configuration from the service script. It also was updated to include all attributes in the VenusOS dashboard
+This service has been modified from the original to allow for single phase support and separation of configuration from the service script. It also was updated to include all attributes in the VenusOS dashboard
 
 ## Credit
 

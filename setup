@@ -8,7 +8,7 @@
 #	setup uninstall
 #	setup reinstall (used to reinstall after Venus OS update)
 
-packageLogFile="/var/log/fronius-smartmeter/current"
+packageLogFile="/var/log/victron-dbus-fronius-smartmeter/current"
 
 #### following line incorporates SetupHelper utilities into this script
 # Refer to the SetupHelper ReadMe file for details.
@@ -23,27 +23,33 @@ packageGitHubBranch="main"
 #### end of lines to include SetupHelper
 
 #### running manually and OK to proceed - prompt for input
-if [ $scriptAction == 'NONE' ] ; then
+if [ "$scriptAction" == 'NONE' ] ; then
     # display innitial message
     echo
-    echo "This package reads an Fronius Smart Meter and forwards it to the dbus"
+    echo "This package reads an Fronius Smart Meter and forwards it to the Victron Dbus"
+
+    if [ -f "$setupOptionsDir/optionsSet" ]; then
+        enableReinstall=true
+    else
+        enableReinstall=false
+    fi
 
     standardActionPrompt
 fi
 
 #### install code goes here
-if [ $scriptAction == 'INSTALL' ] ; then
+if [ $"scriptAction" == 'INSTALL' ] ; then
 
-    logMessage "++ Installing Fronius Smartmeter service"
+    logMessage "++ Installing Victron Dbus Fronius Smartmeter service"
 
-    installService $packageName
+    installService "$packageName"
 fi
 
 #### uninstalling - check scriptAction again
 # if an install step failed package needs to be removed
-if [ $scriptAction == 'UNINSTALL' ] ; then
-    logMessage "++ Uninstalling Fronius Smartmeter service"
+if [ "$scriptAction" == 'UNINSTALL' ] ; then
+    logMessage "++ Uninstalling Victron Dbus Fronius Smartmeter service"
 
-    removeService $packageName
+    removeService "$packageName"
 fi
 endScript
