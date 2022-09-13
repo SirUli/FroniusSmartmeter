@@ -139,31 +139,62 @@ class DbusFroniusService:
         # self._dbusservice.add_path('/Role', self.role, writeable=True,
         #                           onchangecallback=self.role_changed)
 
-        paths = [
-            "/Ac/Power",
-            "/Ac/Frequency",
-            "/Ac/L1/Voltage",
-            "/Ac/L2/Voltage",
-            "/Ac/L3/Voltage",
-            "/Ac/L1/Current",
-            "/Ac/L2/Current",
-            "/Ac/L3/Current",
-            "/Ac/L1/Power",
-            "/Ac/L2/Power",
-            "/Ac/L3/Power",
-            "/Ac/Energy/Forward",
-            "/Ac/Energy/Reverse",
-            "/Latency",
-            path_UpdateIndex,
-        ]
+        _kwh = lambda p, v: (str(round(v, 2)) + "kWh")
+        _a = lambda p, v: (str(round(v, 1)) + "A")
+        _w = lambda p, v: (str(round(v, 1)) + "W")
+        _v = lambda p, v: (str(round(v, 1)) + "V")
+        _ms = lambda p, v: (str(v) + "ms")
+        _hz = lambda p, v: (str(v) + "Hz")
+        _x = lambda p, v: (str(v))
 
-        for path in paths:
-            self._dbusservice.add_path(path, 0, writeable=False)
+        self._paths = {
+            "/Ac/Power": {"initial": 0, "textformat": _w},
+            "/Ac/Current": {"initial": 0, "textformat": _a},
+            "/Ac/Frequency": {"initial": 0, "textformat": _hz},
+            "/Ac/L1/Voltage": {"initial": 0, "textformat": _v},
+            "/Ac/L2/Voltage": {"initial": 0, "textformat": _v},
+            "/Ac/L3/Voltage": {"initial": 0, "textformat": _v},
+            "/Ac/L1/Current": {"initial": 0, "textformat": _a},
+            "/Ac/L2/Current": {"initial": 0, "textformat": _a},
+            "/Ac/L3/Current": {"initial": 0, "textformat": _a},
+            "/Ac/L1/Power": {"initial": 0, "textformat": _w},
+            "/Ac/L2/Power": {"initial": 0, "textformat": _w},
+            "/Ac/L3/Power": {"initial": 0, "textformat": _w},
+            "/Ac/Energy/Forward": {
+                "initial": 0,
+                "textformat": _kwh,
+            },  # energy bought from the grid
+            "/Ac/Energy/Reverse": {
+                "initial": 0,
+                "textformat": _kwh,
+            },  # energy sold to the grid
+            "/Ac/L1/Energy/Forward": {"initial": 0, "textformat": _kwh},
+            "/Ac/L2/Energy/Forward": {"initial": 0, "textformat": _kwh},
+            "/Ac/L3/Energy/Forward": {"initial": 0, "textformat": _kwh},
+            "/Ac/L1/Energy/Reverse": {"initial": 0, "textformat": _kwh},
+            "/Ac/L2/Energy/Reverse": {"initial": 0, "textformat": _kwh},
+            "/Ac/L3/Energy/Reverse": {"initial": 0, "textformat": _kwh},
+            "/Latency": {"initial": 0, "textformat": _ms},
+            path_UpdateIndex: {"initial": 0, "textformat": _x},
+        }
+
+        for path, settings in self._paths.items():
+            self._dbusservice.add_path(
+                path,
+                settings["initial"],
+                gettextcallback=settings["textformat"],
+                writeable=True,
+                onchangecallback=self._handlechangedvalue,
+            )
 
         self._retries = 0
         self._failures = 0
         self._latency = None
         gobject.timeout_add(700, self._safe_update)
+
+    def _handlechangedvalue(self, path, value):
+        log.debug("someone else updated %s to %s" % (path, value))
+        return True  # accept the change
 
     def _safe_update(self):
         try:
@@ -196,6 +227,14 @@ class DbusFroniusService:
         meter_data = self._get_meter_data()
         meter_consumption = meter_data["PowerReal_P_Sum"]
         meter_model = meter_data["Details"]["Model"]
+        if meter_model == "Smart Meter TS 65A-3":
+            # Device doesn't feature data for various paths
+            self._dbusservice["/Ac/L1/Energy/Forward"] = None
+            self._dbusservice["/Ac/L1/Energy/Reverse"] = None
+            self._dbusservice["/Ac/L2/Energy/Forward"] = None
+            self._dbusservice["/Ac/L2/Energy/Reverse"] = None
+            self._dbusservice["/Ac/L3/Energy/Forward"] = None
+            self._dbusservice["/Ac/L3/Energy/Reverse"] = None
         if meter_model == "Smart Meter 63A-1":  # set values for single phase meter
             meter_data["Voltage_AC_Phase_2"] = 0
             meter_data["Voltage_AC_Phase_3"] = 0
@@ -203,16 +242,20 @@ class DbusFroniusService:
             meter_data["Current_AC_Phase_3"] = 0
             meter_data["PowerReal_P_Phase_2"] = 0
             meter_data["PowerReal_P_Phase_3"] = 0
-        self._dbusservice[
-            "/Ac/Power"
-        ] = meter_consumption  # positive: consumption, negative: feed into grid
+            self._dbusservice["/Ac/L2/Energy/Forward"] = None
+            self._dbusservice["/Ac/L2/Energy/Reverse"] = None
+            self._dbusservice["/Ac/L3/Energy/Forward"] = None
+            self._dbusservice["/Ac/L3/Energy/Reverse"] = None
         self._dbusservice["/Ac/Frequency"] = meter_data["Frequency_Phase_Average"]
         self._dbusservice["/Ac/L1/Voltage"] = meter_data["Voltage_AC_Phase_1"]
         self._dbusservice["/Ac/L2/Voltage"] = meter_data["Voltage_AC_Phase_2"]
         self._dbusservice["/Ac/L3/Voltage"] = meter_data["Voltage_AC_Phase_3"]
+        self._dbusservice["/Ac/Current"] = meter_data["Current_AC_Sum"]
         self._dbusservice["/Ac/L1/Current"] = meter_data["Current_AC_Phase_1"]
         self._dbusservice["/Ac/L2/Current"] = meter_data["Current_AC_Phase_2"]
         self._dbusservice["/Ac/L3/Current"] = meter_data["Current_AC_Phase_3"]
+        # positive: consumption, negative: feed into grid
+        self._dbusservice["/Ac/Power"] = meter_consumption
         self._dbusservice["/Ac/L1/Power"] = meter_data["PowerReal_P_Phase_1"]
         self._dbusservice["/Ac/L2/Power"] = meter_data["PowerReal_P_Phase_2"]
         self._dbusservice["/Ac/L3/Power"] = meter_data["PowerReal_P_Phase_3"]
@@ -268,7 +311,7 @@ def main():
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(logging.INFO)
     formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        "%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s"
     )
     handler.setFormatter(formatter)
     root.addHandler(handler)
