@@ -24,21 +24,14 @@ packageGitHubBranch="main"
 
 #### running manually and OK to proceed - prompt for input
 if [ "$scriptAction" == 'NONE' ] ; then
-    # display innitial message
-    echo
+    # display initial message
     echo "This package reads an Fronius Smart Meter and forwards it to the Victron Dbus"
 
-    if [ -f "$setupOptionsDir/optionsSet" ]; then
-        enableReinstall=true
-    else
-        enableReinstall=false
-    fi
-
-    standardActionPrompt
+    scriptAction='INSTALL'
 fi
 
 #### install code goes here
-if [ $"scriptAction" == 'INSTALL' ] ; then
+if [ "$scriptAction" == 'INSTALL' ] ; then
 
     logMessage "++ Installing Victron Dbus Fronius Smartmeter service"
 

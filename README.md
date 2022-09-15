@@ -26,16 +26,8 @@ This script is meant to be installed through the [SetupHelper](https://github.co
 
 The script should auto-detect the IP of the Fronius device if it is on the same network. Otherwise specify the IP using --ip.
 
-## Operation
-
-### Service Status
+## Service Status
 
 You can check the status of the service with svstat:
 
 `svstat /service/victron-dbus-fronius-smartmeter`
-
-### Service Service
-
-To restart the service, run the following command:
-
-`/data/victron-dbus-fronius-smartmeter/kill_me.sh`

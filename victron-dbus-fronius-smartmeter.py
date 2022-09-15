@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 
 """
-Created by Ralf Zimmermann (mail@ralfzimmermann.de) in 2020.
-This code and its documentation can be found on: https://github.com/RalfZim/venus.dbus-fronius-smartmeter
+Created by Ralf Zimmermann (mail@ralfzimmermann.de) in 2020. The original code
+and its documentation can be found on:
+ - https://github.com/RalfZim/venus.dbus-fronius-smartmeter
+This code was created from different sources:
+- [https://github.com/RalfZim/venus.dbus-fronius-smartmeter](https://github.com/RalfZim/venus.dbus-fronius-smartmeter)
+- [https://github.com/unifiedcommsguy/victron-dbus-fronius-smartmeter](https://github.com/unifiedcommsguy/victron-dbus-fronius-smartmeter)
+- [https://github.com/ayasystems/dbus-fronius-smart-meter](https://github.com/ayasystems/dbus-fronius-smart-meter)
+- [https://github.com/trixing/venus.dbus-fronius-smartmeter](https://github.com/trixing/venus.dbus-fronius-smartmeter)
+- [https://github.com/victronenergy/velib_python](https://github.com/victronenergy/velib_python)
 Used https://github.com/victronenergy/velib_python/blob/master/dbusdummyservice.py as basis for this service.
 Reading information from the Fronius Smart Meter via http REST API and puts the info on dbus.
 """
@@ -26,7 +33,9 @@ except ImportError:
     import _thread as thread  # for daemon = True  / Python 3.x
 
 # our own packages
-sys.path.insert(1, os.path.join(os.path.dirname(__file__), "../ext/velib_python"))
+sys.path.insert(
+    1, os.path.join(os.path.sep, "data", "SetupHelper", "ext", "velib_python")
+)
 from vedbus import VeDbusService, VeDbusItemImport
 
 log = logging.getLogger("DbusFroniusSmartMeter")
@@ -105,7 +114,8 @@ class DbusFroniusService:
         self._url = (
             "http://"
             + self._ip
-            + "/solar_api/v1/GetMeterRealtimeData.cgi?Scope=Device&DeviceId=0&DataCollection=MeterRealtimeData"
+            + "/solar_api/v1/GetMeterRealtimeData.cgi?"
+            + "Scope=Device&DeviceId=0&DataCollection=MeterRealtimeData"
         )
         data = self._get_meter_data()
 
@@ -136,8 +146,9 @@ class DbusFroniusService:
         self.default_role = "grid"
         self.role = self.default_role
         self._dbusservice.add_path("/AllowedRoles", self.allowed_roles)
-        # self._dbusservice.add_path('/Role', self.role, writeable=True,
-        #                           onchangecallback=self.role_changed)
+        self._dbusservice.add_path(
+            "/Role", self.role, writeable=True, onchangecallback=self.role_changed
+        )
 
         _kwh = lambda p, v: (str(round(v, 2)) + "kWh")
         _a = lambda p, v: (str(round(v, 1)) + "A")
