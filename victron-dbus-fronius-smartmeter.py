@@ -317,10 +317,12 @@ def main():
     # logging.basicConfig(level=logging.INFO)
 
     root = logging.getLogger()
-    root.setLevel(logging.INFO)
+    # Log Level logging.INFO to get more details
+    root.setLevel(logging.ERROR)
 
     handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.INFO)
+    # Log Level logging.INFO to get more details
+    handler.setLevel(logging.ERROR)
     formatter = logging.Formatter(
         "%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s"
     )
