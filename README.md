@@ -1,4 +1,4 @@
-# victron-dbus-fronius-smartmeter
+# FroniusSmartmeter
 
 ## Purpose
 
@@ -20,7 +20,11 @@ Special thanks goes to the following for the basis of this modified code:
 
 ## Installation
 
-This script is meant to be installed through the [SetupHelper](https://github.com/kwindrem/SetupHelper) of kwindrem.
+This script is meant to be installed through the [SetupHelper](https://github.com/kwindrem/SetupHelper) of kwindrem. Use the following details:
+
+- Package Name: `FroniusSmartmeter`
+- GitHub User: `SirUli`
+- Github branch or tag: `main`
 
 ## Configuration
 
