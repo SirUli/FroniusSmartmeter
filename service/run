@@ -1,2 +1,2 @@
 #!/bin/sh
-python /data/victron-dbus-fronius-smartmeter/victron-dbus-fronius-smartmeter.py
+python /data/FroniusSmartmeter/fronius-smartmeter.py

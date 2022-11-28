@@ -8,7 +8,7 @@
 #	setup uninstall
 #	setup reinstall (used to reinstall after Venus OS update)
 
-packageLogFile="/var/log/victron-dbus-fronius-smartmeter/current"
+packageLogFile="/var/log/FroniusSmartmeter/current"
 
 #### following line incorporates SetupHelper utilities into this script
 # Refer to the SetupHelper ReadMe file for details.
