@@ -159,34 +159,34 @@ class DbusFroniusService:
         _x = lambda p, v: (str(v))
 
         self._paths = {
-            "/Ac/Power": {"initial": 0, "textformat": _w},
-            "/Ac/Current": {"initial": 0, "textformat": _a},
-            "/Ac/Frequency": {"initial": 0, "textformat": _hz},
-            "/Ac/L1/Voltage": {"initial": 0, "textformat": _v},
-            "/Ac/L2/Voltage": {"initial": 0, "textformat": _v},
-            "/Ac/L3/Voltage": {"initial": 0, "textformat": _v},
-            "/Ac/L1/Current": {"initial": 0, "textformat": _a},
-            "/Ac/L2/Current": {"initial": 0, "textformat": _a},
-            "/Ac/L3/Current": {"initial": 0, "textformat": _a},
-            "/Ac/L1/Power": {"initial": 0, "textformat": _w},
-            "/Ac/L2/Power": {"initial": 0, "textformat": _w},
-            "/Ac/L3/Power": {"initial": 0, "textformat": _w},
+            "/Ac/Power": {"initial": None, "textformat": _w},
+            "/Ac/Current": {"initial": None, "textformat": _a},
+            "/Ac/Frequency": {"initial": None, "textformat": _hz},
+            "/Ac/L1/Voltage": {"initial": None, "textformat": _v},
+            "/Ac/L2/Voltage": {"initial": None, "textformat": _v},
+            "/Ac/L3/Voltage": {"initial": None, "textformat": _v},
+            "/Ac/L1/Current": {"initial": None, "textformat": _a},
+            "/Ac/L2/Current": {"initial": None, "textformat": _a},
+            "/Ac/L3/Current": {"initial": None, "textformat": _a},
+            "/Ac/L1/Power": {"initial": None, "textformat": _w},
+            "/Ac/L2/Power": {"initial": None, "textformat": _w},
+            "/Ac/L3/Power": {"initial": None, "textformat": _w},
             "/Ac/Energy/Forward": {
-                "initial": 0,
+                "initial": None,
                 "textformat": _kwh,
             },  # energy bought from the grid
             "/Ac/Energy/Reverse": {
-                "initial": 0,
+                "initial": None,
                 "textformat": _kwh,
             },  # energy sold to the grid
-            "/Ac/L1/Energy/Forward": {"initial": 0, "textformat": _kwh},
-            "/Ac/L2/Energy/Forward": {"initial": 0, "textformat": _kwh},
-            "/Ac/L3/Energy/Forward": {"initial": 0, "textformat": _kwh},
-            "/Ac/L1/Energy/Reverse": {"initial": 0, "textformat": _kwh},
-            "/Ac/L2/Energy/Reverse": {"initial": 0, "textformat": _kwh},
-            "/Ac/L3/Energy/Reverse": {"initial": 0, "textformat": _kwh},
-            "/Latency": {"initial": 0, "textformat": _ms},
-            path_UpdateIndex: {"initial": 0, "textformat": _x},
+            "/Ac/L1/Energy/Forward": {"initial": None, "textformat": _kwh},
+            "/Ac/L2/Energy/Forward": {"initial": None, "textformat": _kwh},
+            "/Ac/L3/Energy/Forward": {"initial": None, "textformat": _kwh},
+            "/Ac/L1/Energy/Reverse": {"initial": None, "textformat": _kwh},
+            "/Ac/L2/Energy/Reverse": {"initial": None, "textformat": _kwh},
+            "/Ac/L3/Energy/Reverse": {"initial": None, "textformat": _kwh},
+            "/Latency": {"initial": None, "textformat": _ms},
+            path_UpdateIndex: {"initial": None, "textformat": _x},
         }
 
         for path, settings in self._paths.items():
@@ -246,13 +246,13 @@ class DbusFroniusService:
             self._dbusservice["/Ac/L2/Energy/Reverse"] = None
             self._dbusservice["/Ac/L3/Energy/Forward"] = None
             self._dbusservice["/Ac/L3/Energy/Reverse"] = None
-        if meter_model == "Smart Meter 63A-1":  # set values for single phase meter
-            meter_data["Voltage_AC_Phase_2"] = 0
-            meter_data["Voltage_AC_Phase_3"] = 0
-            meter_data["Current_AC_Phase_2"] = 0
-            meter_data["Current_AC_Phase_3"] = 0
-            meter_data["PowerReal_P_Phase_2"] = 0
-            meter_data["PowerReal_P_Phase_3"] = 0
+        if meter_model == 'Smart Meter TS 100A-1' or meter_model == "Smart Meter 63A-1":  # set values for single phase meter
+            meter_data["Voltage_AC_Phase_2"] = None
+            meter_data["Voltage_AC_Phase_3"] = None
+            meter_data["Current_AC_Phase_2"] = None
+            meter_data["Current_AC_Phase_3"] = None
+            meter_data["PowerReal_P_Phase_2"] = None
+            meter_data["PowerReal_P_Phase_3"] = None
             self._dbusservice["/Ac/L2/Energy/Forward"] = None
             self._dbusservice["/Ac/L2/Energy/Reverse"] = None
             self._dbusservice["/Ac/L3/Energy/Forward"] = None
