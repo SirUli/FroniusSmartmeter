@@ -261,7 +261,8 @@ class DbusFroniusService:
         self._dbusservice["/Ac/L1/Voltage"] = meter_data["Voltage_AC_Phase_1"]
         self._dbusservice["/Ac/L2/Voltage"] = meter_data["Voltage_AC_Phase_2"]
         self._dbusservice["/Ac/L3/Voltage"] = meter_data["Voltage_AC_Phase_3"]
-        self._dbusservice["/Ac/Current"] = meter_data["Current_AC_Sum"]
+        if "Current_AC_Sum" in meter_data:
+            self._dbusservice["/Ac/Current"] = meter_data["Current_AC_Sum"]
         self._dbusservice["/Ac/L1/Current"] = meter_data["Current_AC_Phase_1"]
         self._dbusservice["/Ac/L2/Current"] = meter_data["Current_AC_Phase_2"]
         self._dbusservice["/Ac/L3/Current"] = meter_data["Current_AC_Phase_3"]
