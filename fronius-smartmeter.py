@@ -257,20 +257,30 @@ class DbusFroniusService:
             self._dbusservice["/Ac/L2/Energy/Reverse"] = None
             self._dbusservice["/Ac/L3/Energy/Forward"] = None
             self._dbusservice["/Ac/L3/Energy/Reverse"] = None
-        self._dbusservice["/Ac/Frequency"] = meter_data["Frequency_Phase_Average"]
-        self._dbusservice["/Ac/L1/Voltage"] = meter_data["Voltage_AC_Phase_1"]
-        self._dbusservice["/Ac/L2/Voltage"] = meter_data["Voltage_AC_Phase_2"]
-        self._dbusservice["/Ac/L3/Voltage"] = meter_data["Voltage_AC_Phase_3"]
+        if "Frequency_Phase_Average" in meter_data:    
+            self._dbusservice["/Ac/Frequency"] = meter_data["Frequency_Phase_Average"]
+        if "Voltage_AC_Phase_1" in meter_data:
+            self._dbusservice["/Ac/L1/Voltage"] = meter_data["Voltage_AC_Phase_1"]
+        if "Voltage_AC_Phase_2" in meter_data:
+            self._dbusservice["/Ac/L2/Voltage"] = meter_data["Voltage_AC_Phase_2"]
+        if "Voltage_AC_Phase_3" in meter_data:
+            self._dbusservice["/Ac/L3/Voltage"] = meter_data["Voltage_AC_Phase_3"]
         if "Current_AC_Sum" in meter_data:
             self._dbusservice["/Ac/Current"] = meter_data["Current_AC_Sum"]
-        self._dbusservice["/Ac/L1/Current"] = meter_data["Current_AC_Phase_1"]
-        self._dbusservice["/Ac/L2/Current"] = meter_data["Current_AC_Phase_2"]
-        self._dbusservice["/Ac/L3/Current"] = meter_data["Current_AC_Phase_3"]
+        if "Current_AC_Phase_1" in meter_data:
+            self._dbusservice["/Ac/L1/Current"] = meter_data["Current_AC_Phase_1"]
+        if "Current_AC_Phase_2" in meter_data:
+            self._dbusservice["/Ac/L2/Current"] = meter_data["Current_AC_Phase_2"]
+        if "Current_AC_Phase_3" in meter_data:
+            self._dbusservice["/Ac/L3/Current"] = meter_data["Current_AC_Phase_3"]
         # positive: consumption, negative: feed into grid
         self._dbusservice["/Ac/Power"] = meter_consumption
-        self._dbusservice["/Ac/L1/Power"] = meter_data["PowerReal_P_Phase_1"]
-        self._dbusservice["/Ac/L2/Power"] = meter_data["PowerReal_P_Phase_2"]
-        self._dbusservice["/Ac/L3/Power"] = meter_data["PowerReal_P_Phase_3"]
+        if "PowerReal_P_Phase_1" in meter_data:
+            self._dbusservice["/Ac/L1/Power"] = meter_data["PowerReal_P_Phase_1"]
+        if "PowerReal_P_Phase_2" in meter_data:
+            self._dbusservice["/Ac/L2/Power"] = meter_data["PowerReal_P_Phase_2"]
+        if "PowerReal_P_Phase_3" in meter_data:
+            self._dbusservice["/Ac/L3/Power"] = meter_data["PowerReal_P_Phase_3"]
         self._dbusservice["/Ac/Energy/Forward"] = (
             float(meter_data["EnergyReal_WAC_Sum_Consumed"]) / 1000.0
         )
