@@ -1,0 +1,13 @@
+ignore: # A list of paths or files which Sourcery will ignore.
+- .git
+- venv
+
+rule_settings:
+  enable:
+  - default
+  disable: []  # A list of rule IDs Sourcery will never suggest.
+  rule_types:
+  - refactoring
+  - suggestion
+  - comment
+  python_version: '3.8' # A string specifying the lowest Python version your project supports. Sourcery will not suggest refactorings requiring a higher Python version.
