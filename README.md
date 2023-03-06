@@ -30,8 +30,24 @@ This script is meant to be installed through the [SetupHelper](https://github.co
 
 The script should auto-detect the IP of the Fronius device if it is on the same network. Otherwise specify the IP using --ip.
 
-## Service Status
+## Service Logs
 
-You can check the status of the service with svstat:
+To see if the service runs without any issues, check the file ``/data/log/FroniusSmartmeter/current``. This should have as last entries something similar to:
 
-`svstat /service/victron-dbus-fronius-smartmeter`
+```plaintext
+@400000006404ec000994a10c *** CCGX booted (0) ***
+@400000006404ec5f270ea264 FroniusSmartmeter/setup: --- starting setup script <some version>
+@400000006404ec5f31dd6b44 FroniusSmartmeter/setup: ++ Installing Victron Dbus Fronius Smartmeter service
+@400000006404ec5f33808c24 FroniusSmartmeter/setup: installing FroniusSmartmeter service - please wait
+@400000006404ec6a01738f24 FroniusSmartmeter/setup: completed
+```
+
+If the service actually has issues, then check via the process list `ps|grep smartmeter` what this might be (if it isn't in the logs).
+
+Also you can try to start the service manually:
+
+```bash
+python /data/FroniusSmartmeter/fronius-smartmeter.py
+```
+
+If you really run into trouble, don't hesitate to check the list of [issues here on Github](https://github.com/SirUli/FroniusSmartmeter/issues) to see if anyone else stumbled across that. If not, please open an issue!
